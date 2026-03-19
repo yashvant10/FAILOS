@@ -9,6 +9,10 @@
   ],
   "routes": [
     {
+      "src": "/static/(.*)",
+      "dest": "public/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "failos_project/wsgi.py"
     }

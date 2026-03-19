@@ -8,8 +8,8 @@
     /* ==================== DESIGN SYSTEM - FLUID GRADIENT ==================== */
     :root {
         --white: #ffffff;
-        --hero-gradient: radial-gradient(circle at top right, rgba(139, 92, 246, 0.15), transparent 40%),
-                         radial-gradient(circle at bottom left, rgba(6, 182, 212, 0.1), transparent 40%);
+        --hero-gradient: radial-gradient(circle at top right, rgba(168, 85, 247, 0.2), transparent 50%),
+                         radial-gradient(circle at bottom left, rgba(6, 182, 212, 0.15), transparent 50%);
     }
 
     body.dark-theme {
@@ -35,9 +35,9 @@
         opacity: 0.5;
         animation: float 8s ease-in-out infinite;
     }
-    .blob-1 { width: 500px; height: 500px; background: rgba(168, 85, 247, 0.4); top: -10%; right: -5%; }
-    .blob-2 { width: 400px; height: 400px; background: rgba(99, 102, 241, 0.35); top: 30%; left: -8%; }
-    .blob-3 { width: 350px; height: 350px; background: rgba(192, 132, 252, 0.3); bottom: 10%; right: 10%; }
+    .blob-1 { width: 500px; height: 500px; background: rgba(168, 85, 247, 0.25); top: -10%; right: -5%; }
+    .blob-2 { width: 400px; height: 400px; background: rgba(99, 102, 241, 0.2); top: 30%; left: -8%; }
+    .blob-3 { width: 350px; height: 350px; background: rgba(192, 132, 252, 0.15); bottom: 10%; right: 10%; }
     @keyframes float {
         0%, 100% { transform: translate(0, 0) scale(1); }
         33% { transform: translate(30px, -30px) scale(1.05); }
@@ -83,6 +83,7 @@
         line-height: 1.7;
         max-width: 700px;
         margin-bottom: 2rem;
+        text-shadow: 0 1px 5px rgba(0,0,0,0.3);
     }
     .text-center { text-align: center; }
     .mx-auto { margin-left: auto; margin-right: auto; }

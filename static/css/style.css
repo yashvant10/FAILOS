@@ -1,21 +1,21 @@
 /* ==================== PREMIUM DESIGN SYSTEM V3 ==================== */
 :root {
     /* Color Palette - Deep Galactic & Neon Accents */
-    --bg-main: #020617; /* Deepest Navy */
-    --bg-secondary: #0f172a; /* Slate 900 */
-    --bg-card: #1e293b; /* Slate 800 */
-    --bg-glass: rgba(255, 255, 255, 0.03);
-    --bg-glass-heavy: rgba(15, 23, 42, 0.8);
-    --border-glass: rgba(255, 255, 255, 0.1);
-    --border-glow: rgba(139, 92, 246, 0.4);
+    --bg-main: #010409; /* Deeper Black-Navy for better contrast */
+    --bg-secondary: #0d1117; 
+    --bg-card: #161b22; 
+    --bg-glass: rgba(255, 255, 255, 0.05);
+    --bg-glass-heavy: rgba(1, 4, 9, 0.85); /* Darker glass for better readability */
+    --border-glass: rgba(255, 255, 255, 0.12);
+    --border-glow: rgba(139, 92, 246, 0.5);
     
-    --text-primary: #f8fafc;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
+    --text-primary: #ffffff; /* pure white */
+    --text-secondary: #cbd5e1; /* Lighter slate for better reading */
+    --text-muted: #94a3b8;
     
-    --accent-primary: #8b5cf6; /* Electric Violet */
-    --accent-secondary: #38bdf8; /* Sky Blue */
-    --accent-gradient: linear-gradient(135deg, #8b5cf6 0%, #38bdf8 100%);
+    --accent-primary: #a855f7; /* Brighter Purple */
+    --accent-secondary: #22d3ee; /* Brighter Cyan */
+    --accent-gradient: linear-gradient(135deg, #a855f7 0%, #06b6d4 100%);
     --accent-glow: rgba(139, 92, 246, 0.4);
     
     --success: #10b981;
@@ -64,6 +64,7 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
     margin-bottom: 1rem;
     letter-spacing: -0.02em;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Added for readability on light gradients */
 }
 
 a {
@@ -172,8 +173,10 @@ a:hover {
 .btn-primary {
     background: var(--accent-gradient);
     color: #fff !important;
-    box-shadow: 0 4px 15px var(--accent-glow);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .btn-primary:hover {

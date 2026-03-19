@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: failos-ai
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn failos_project.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: DJANGO_SETTINGS_MODULE
+        value: failos_project.settings
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false

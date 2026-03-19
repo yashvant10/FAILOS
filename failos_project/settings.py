@@ -132,7 +132,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # WhiteNoise storage for compressed and cached files
 if not DEBUG:
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

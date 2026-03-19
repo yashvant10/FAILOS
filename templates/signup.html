@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="display: flex; justify-content: center; align-items: center; min-height: 70vh;">
+    <div class="glass-panel slide-in" style="width: 100%; max-width: 500px;">
+        <div style="text-align: center; margin-bottom: 2rem;">
+            <h2>Create an Account</h2>
+            <p style="color: var(--text-secondary);">Start learning from failures today</p>
+        </div>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <div class="grid grid-cols-2" style="gap: 1rem;">
+                <div class="form-group">
+                    <label class="form-label">First Name</label>
+                    <input type="text" name="first_name" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Last Name</label>
+                    <input type="text" name="last_name" class="form-control">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Username *</label>
+                <input type="text" name="username" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Email *</label>
+                <input type="email" name="email" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Password *</label>
+                <input type="password" name="password" class="form-control" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary pulse-hover" style="width: 100%; margin-bottom: 1rem;">
+                <i class="fa-solid fa-user-plus"></i> Sign Up
+            </button>
+            
+            <button type="button" class="btn btn-outline" style="width: 100%; margin-bottom: 1.5rem;">
+                <i class="fa-brands fa-google" style="color: #ea4335;"></i> Sign up with Google
+            </button>
+            
+            <p style="text-align: center; font-size: 0.9rem;">
+                Already have an account? <a href="{% url 'login' %}">Log in</a>
+            </p>
+        </form>
+    </div>
+</div>
+{% endblock %}

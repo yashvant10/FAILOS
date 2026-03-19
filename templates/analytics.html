@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div style="margin-bottom: 2rem;">
+        <h2><i class="fa-solid fa-chart-pie"></i> Your Analytics</h2>
+        <p style="color: var(--text-secondary);">Deep dive into your failure patterns.</p>
+    </div>
+
+    <div class="grid grid-cols-2">
+        <div class="glass-panel slide-in" style="min-height: 300px; display: flex; align-items: flex-start; justify-content: flex-start; flex-direction: column;">
+            <h3 style="color: var(--accent-secondary); margin-top: 0; margin-bottom: 1.5rem; width: 100%;"><i class="fa-solid fa-chart-column"></i> Top Failure Reasons</h3>
+            {% if total_analyses > 0 %}
+                <ul style="width: 100%; list-style: none; padding: 0; margin: 0;">
+                {% for reason, percentage in top_reasons.items %}
+                    <li style="margin-bottom: 1.2rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
+                            <span style="font-weight: 500; color: var(--text-primary);">{{ reason }}</span>
+                            <span style="color: var(--info); font-weight: 600;">{{ percentage }}%</span>
+                        </div>
+                        <div style="width: 100%; background: rgba(255,255,255,0.05); border-radius: 4px; height: 8px; overflow: hidden;">
+                            <div style="background: var(--info); width: {{ percentage }}%; height: 100%; border-radius: 4px;"></div>
+                        </div>
+                    </li>
+                {% empty %}
+                    <li style="color: var(--text-muted); text-align: center; margin-top: 2rem;">Not enough data for pattern detection yet.</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p style="color: var(--text-muted); align-self: center; margin-top: 3rem;">No analysis data available yet.</p>
+            {% endif %}
+        </div>
+        <div class="glass-panel slide-in" style="min-height: 300px; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+            <i class="fa-solid fa-chart-line" style="font-size: 5rem; color: var(--info); margin-bottom: 1rem; opacity: 0.5;"></i>
+            <p style="color: var(--text-muted);">Failure Timeline Trends (Coming Soon)</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+# Python-specific ignores
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Django-specific ignores
+db.sqlite3
+media/
+static_root/
+staticfiles/
+
+# OS-specific ignores
+.DS_Store
+Thumbs.db

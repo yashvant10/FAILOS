@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="display: flex; justify-content: center; align-items: center; min-height: 70vh;">
+    <div class="glass-panel slide-in" style="width: 100%; max-width: 400px; text-align: center;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/24/Paytm_Logo_%28standalone%29.svg" alt="Paytm" style="max-width: 150px; margin-bottom: 2rem;">
+        
+        <h3>Scan QR Code to Pay</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">Amount: ₹750 (Approx $9)</p>
+        
+        <div style="background: #fff; display: inline-block; padding: 1rem; border-radius: 8px; margin-bottom: 2rem;">
+            <i class="fa-solid fa-qrcode" style="font-size: 10rem; color: #000;"></i>
+        </div>
+        
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem;">After successful payment, click the button below to verify your transaction.</p>
+        
+        <a href="{% url 'paytm_success' %}" class="btn btn-primary pulse-hover" style="width: 100%;">I Have Paid</a>
+    </div>
+</div>
+{% endblock %}

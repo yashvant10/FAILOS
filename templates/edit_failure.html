@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="glass-panel slide-in" style="max-width: 800px; margin: 0 auto;">
+        <h2 style="margin-bottom: 1rem;"><i class="fa-solid fa-pen-to-square"></i> Edit Failure Record</h2>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="form-label">Project / Idea Title</label>
+                <input type="text" name="title" class="form-control" value="{{ failure.title }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Description</label>
+                <textarea name="description" class="form-control" rows="8" required>{{ failure.description }}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Country</label>
+                <select id="country-select" class="form-control" required>
+                    <option value="">Select Country</option>
+                    {% for country in countries %}
+                    <option value="{{ country.id }}" {% if failure.state_model and failure.state_model.country_id == country.id %}selected{% endif %}>{{ country.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="grid grid-cols-2" style="gap: 1rem; margin-bottom: 1rem;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label">State</label>
+                    <select id="state-select" name="state_id" class="form-control" required>
+                        <option value="">Select State</option>
+                        {% if failure.state_model %}
+                            <option value="{{ failure.state_model.id }}" selected>{{ failure.state_model.name }}</option>
+                        {% endif %}
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label">City</label>
+                    <select id="city-select" name="city_id" class="form-control" required>
+                        <option value="">Select City</option>
+                        {% if failure.city_model %}
+                            <option value="{{ failure.city_model.id }}" selected>{{ failure.city_model.name }}</option>
+                        {% endif %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Estimated Budget (₹)</label>
+                <input type="number" name="budget" class="form-control" value="{{ failure.budget|floatformat:0 }}" min="0" required>
+            </div>
+            
+            <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="checkbox" name="is_public" id="is_public" {% if failure.is_public %}checked{% endif %}>
+                <label for="is_public" style="color: var(--text-secondary); cursor: pointer;">Make this record public</label>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2rem;">
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary pulse-hover">Save Changes & Re-analyze</button>
+                    <a href="{% url 'failure_details' failure.id %}" class="btn btn-outline">Cancel</a>
+                </div>
+                <button type="submit" name="delete" class="btn btn-outline" style="color: var(--danger); border-color: var(--danger);" onclick="return confirm('CRITICAL: Are you sure you want to delete this record?')">Delete Record</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const countrySelect = document.getElementById('country-select');
+    const stateSelect = document.getElementById('state-select');
+    const citySelect = document.getElementById('city-select');
+
+    function fetchStates(countryId, selectedId = null) {
+        if (!countryId) {
+            stateSelect.innerHTML = '<option value="">Select State</option>';
+            stateSelect.disabled = true;
+            return;
+        }
+        fetch(`/get-states/${countryId}/`)
+            .then(response => response.json())
+            .then(data => {
+                stateSelect.innerHTML = '<option value="">Select State</option>';
+                data.forEach(state => {
+                    const option = document.createElement('option');
+                    option.value = state.id;
+                    option.textContent = state.name;
+                    if (selectedId && state.id == selectedId) option.selected = true;
+                    stateSelect.appendChild(option);
+                });
+                stateSelect.disabled = false;
+            });
+    }
+
+    function fetchCities(stateId, selectedId = null) {
+        if (!stateId) {
+            citySelect.innerHTML = '<option value="">Select City</option>';
+            citySelect.disabled = true;
+            return;
+        }
+        fetch(`/get-cities/${stateId}/`)
+            .then(response => response.json())
+            .then(data => {
+                citySelect.innerHTML = '<option value="">Select City</option>';
+                data.forEach(city => {
+                    const option = document.createElement('option');
+                    option.value = city.id;
+                    option.textContent = city.name;
+                    if (selectedId && city.id == selectedId) option.selected = true;
+                    citySelect.appendChild(option);
+                });
+                citySelect.disabled = false;
+            });
+    }
+
+    countrySelect.addEventListener('change', function() {
+        fetchStates(this.value);
+        citySelect.innerHTML = '<option value="">Select City</option>';
+        citySelect.disabled = true;
+    });
+
+    stateSelect.addEventListener('change', function() {
+        fetchCities(this.value);
+    });
+
+    // If initial country/state exists, reload options to allow selection changed
+    {% if failure.state_model %}
+        // On load, states are already there from template, but we need to hook up cities
+        // fetchStates is not needed since one option is there, but for a full list we need it
+        fetchStates(countrySelect.value, "{{ failure.state_model.id }}");
+    {% endif %}
+    {% if failure.city_model %}
+        fetchCities("{{ failure.state_model.id }}", "{{ failure.city_model.id }}");
+    {% endif %}
+</script>
+{% endblock %}

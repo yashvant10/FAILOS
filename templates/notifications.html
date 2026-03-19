@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2 style="margin-bottom: 1.5rem;"><i class="fa-regular fa-bell"></i> Notifications</h2>
+    
+    <div class="glass-panel slide-in" style="padding: 0;">
+        <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-glass);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                    <h4 style="margin-bottom: 0.2rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fa-solid fa-robot" style="color: var(--accent-secondary);"></i>
+                        AI Analysis Complete
+                    </h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Your failure record "Food Delivery App" has been analyzed successfully.</p>
+                </div>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">2 hours ago</span>
+            </div>
+        </div>
+        
+        <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-glass); background: rgba(255,255,255,0.02);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                    <h4 style="margin-bottom: 0.2rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fa-solid fa-gift" style="color: var(--warning);"></i>
+                        Welcome to FAILOS AI!
+                    </h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Thanks for joining. Start by submitting your first failure.</p>
+                </div>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">1 day ago</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

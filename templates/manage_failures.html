@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="max-width: 1000px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem;">
+        <div>
+            <h1 style="font-size: 2rem; margin-bottom: 0.5rem;"><i class="fa-solid fa-database"></i> Startup Intelligence Records</h1>
+            <p style="color: var(--text-secondary);">Manage all failure records logged on the platform.</p>
+        </div>
+        <a href="{% url 'admin_dashboard' %}" class="btn btn-outline" style="font-size: 0.85rem;">&larr; Back to Panel</a>
+    </div>
+    
+    <div class="glass-panel reveal-up" style="padding: 0; overflow: hidden;">
+        <div class="table-responsive">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr style="background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border-glass);">
+                        <th style="padding: 1.5rem;">Record ID</th>
+                        <th style="padding: 1.5rem;">Intelligence Title</th>
+                        <th style="padding: 1.5rem;">Researcher</th>
+                        <th style="padding: 1.5rem; text-align: right;">Auditing</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for failure in failures %}
+                    <tr style="border-bottom: 1px solid var(--border-glass); transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
+                        <td style="padding: 1.2rem; font-family: monospace; color: var(--accent-secondary);">
+                            #{{ failure.id|stringformat:"04d" }}
+                        </td>
+                        <td style="padding: 1.2rem;">
+                            <div style="font-weight: 700;">{{ failure.title }}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">{{ failure.date_submitted|date:"F d, Y" }}</div>
+                        </td>
+                        <td style="padding: 1.2rem;">
+                            <div style="display: flex; align-items: center; gap: 0.6rem;">
+                                <div style="width: 24px; height: 24px; border-radius: 6px; background: var(--bg-glass); border: 1px solid var(--border-glass); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: var(--text-primary);">
+                                    {{ failure.user.username|slice:":1"|upper }}
+                                </div>
+                                {{ failure.user.username }}
+                            </div>
+                        </td>
+                        <td style="padding: 1.2rem; text-align: right;">
+                            <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                                <a href="{% url 'failure_details' failure.id %}" class="btn btn-outline" style="font-size: 0.75rem; padding: 4px 12px;">View</a>
+                                <form method="POST" action="{% url 'edit_failure' failure.id %}" style="display:inline;" onsubmit="return confirm('Deleting startup intelligence is irreversible. Proceed?')">
+                                    {% csrf_token %}
+                                    <button type="submit" name="delete" class="btn btn-outline" style="font-size: 0.75rem; padding: 4px 12px; color: var(--danger); border-color: rgba(239, 68, 68, 0.2);">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" style="padding: 3rem; text-align: center; color: var(--text-muted);">No records found in the database.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

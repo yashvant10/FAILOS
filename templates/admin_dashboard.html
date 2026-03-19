@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="max-width: 1200px;">
+    <div class="profile-header-container reveal-up" style="background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));">
+        <div class="profile-avatar-large" style="background: var(--accent-primary); box-shadow: 0 0 30px rgba(99, 102, 241, 0.3);">
+            <i class="fa-solid fa-gauge-high"></i>
+        </div>
+        <div class="profile-info">
+            <h1>Staff Control Center</h1>
+            <p style="color: var(--text-secondary);">Manage users, oversee system records, and analyze platform health.</p>
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <a href="{% url 'manage_users' %}" class="btn btn-primary"><i class="fa-solid fa-users"></i> Manage Users</a>
+                <a href="{% url 'manage_failures' %}" class="btn btn-outline"><i class="fa-solid fa-database"></i> Database Records</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Metrics Grid -->
+    <div class="dashboard-grid reveal-up delay-1">
+        <div class="stat-card">
+            <h3 class="stat-label"><i class="fa-solid fa-users"></i> Registered Users</h3>
+            <p class="stat-value">{{ user_count }}</p>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">{{ premium_users }} Premium Analysts</p>
+        </div>
+        <div class="stat-card">
+            <h3 class="stat-label"><i class="fa-solid fa-file-invoice"></i> Failure Ideas</h3>
+            <p class="stat-value">{{ failure_count }}</p>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">Total logged scenarios</p>
+        </div>
+        <div class="stat-card">
+            <h3 class="stat-label"><i class="fa-solid fa-microchip"></i> AI Analyses</h3>
+            <p class="stat-value">{{ total_analyses }}</p>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">Processed intelligence</p>
+        </div>
+        <div class="stat-card">
+            <h3 class="stat-label"><i class="fa-solid fa-bolt"></i> System Health</h3>
+            <p class="stat-value" style="color: var(--success);">100%</p>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">Services Operational</p>
+        </div>
+    </div>
+
+    <!-- Recent Records Feed -->
+    <div class="glass-panel reveal-up delay-2" style="margin-top: 3rem;">
+        <h3 style="margin-bottom: 2rem; display: flex; align-items: center; gap: 0.8rem;">
+            <i class="fa-solid fa-list-check"></i> Recent Platform Activity
+        </h3>
+        <div class="table-responsive">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="border-bottom: 2px solid var(--border-glass); text-align: left;">
+                        <th style="padding: 1rem; color: var(--text-secondary);">Record</th>
+                        <th style="padding: 1rem; color: var(--text-secondary);">Submitter</th>
+                        <th style="padding: 1rem; color: var(--text-secondary);">Risk Status</th>
+                        <th style="padding: 1rem; text-align: right; color: var(--text-secondary);">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for failure in recent_failures %}
+                    <tr style="border-bottom: 1px solid var(--border-glass); transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
+                        <td style="padding: 1.2rem;">
+                            <div style="font-weight: 700;">{{ failure.title }}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">{{ failure.date_submitted|date:"M d, Y" }}</div>
+                        </td>
+                        <td style="padding: 1.2rem;">
+                            <div style="display: flex; align-items: center; gap: 0.6rem;">
+                                <div style="width: 24px; height: 24px; border-radius: 6px; background: var(--accent-secondary); display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: white;">
+                                    {{ failure.user.username|slice:":1"|upper }}
+                                </div>
+                                {{ failure.user.username }}
+                            </div>
+                        </td>
+                        <td style="padding: 1.2rem;">
+                            {% if failure.analysis %}
+                                {% if failure.analysis.risk_level == 'HIGH' %}
+                                    <span class="badge-premium" style="background: rgba(239, 68, 68, 0.1); color: var(--danger); border-color: rgba(239, 68, 68, 0.2);">HIGH</span>
+                                {% elif failure.analysis.risk_level == 'MEDIUM' %}
+                                    <span class="badge-premium" style="background: rgba(245, 158, 11, 0.1); color: var(--warning); border-color: rgba(245, 158, 11, 0.2);">MEDIUM</span>
+                                {% else %}
+                                    <span class="badge-premium" style="background: rgba(16, 185, 129, 0.1); color: var(--success); border-color: rgba(16, 185, 129, 0.2);">LOW</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="badge-premium" style="background: rgba(100, 116, 139, 0.1); color: var(--text-muted); border-color: var(--border-glass);">PENDING</span>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 1.2rem; text-align: right;">
+                            <a href="{% url 'failure_details' failure.id %}" class="btn btn-outline" style="font-size: 0.75rem; padding: 4px 12px;">Audit</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

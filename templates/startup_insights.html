@@ -1,0 +1,303 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container" style="max-width: 1400px; padding-top: 2rem;">
+    <!-- Hero Section -->
+    <div class="reveal-up text-center mb-5">
+        <h1 class="gradient-text" style="font-size: 3.5rem; font-weight: 800;">Global Startup Insights</h1>
+        <p class="text-secondary mx-auto" style="max-width: 700px;">Explore startup ecosystem data across the globe. Analyze success rates, industry trends, and use AI to predict your next big move.</p>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <!-- Sidebar Selection -->
+        <aside class="col-lg-3 reveal-up">
+            <div class="glass-panel h-100" style="padding: 2rem;">
+                <h3 class="mb-4 d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-map-location-dot text-primary"></i> Explore Data
+                </h3>
+                
+                <div class="mb-4">
+                    <label class="form-label text-secondary small text-uppercase fw-bold">Select Country</label>
+                    <select id="countrySelect" class="form-select bg-dark text-white border-secondary">
+                        <option value="">Choose Country...</option>
+                        {% for country in countries %}
+                        <option value="{{ country.id }}">{{ country.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label text-secondary small text-uppercase fw-bold">Select State</label>
+                    <select id="stateSelect" class="form-select bg-dark text-white border-secondary" disabled>
+                        <option value="">Select State...</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label text-secondary small text-uppercase fw-bold">Select City/District</label>
+                    <select id="citySelect" class="form-select bg-dark text-white border-secondary" disabled>
+                        <option value="">Select City...</option>
+                    </select>
+                </div>
+
+                <hr class="border-secondary my-4">
+
+                <div class="analyze-box p-3 rounded" style="background: rgba(139, 92, 246, 0.1); border: 1px solid var(--accent-primary);">
+                    <h5 class="mb-3 small fw-bold text-uppercase"><i class="fa-solid fa-microscope"></i> Market Analyzer</h5>
+                    <p class="text-secondary small mb-3">Get a deep dive into local success and failure patterns.</p>
+                    <button id="analyzeBtn" class="btn btn-primary w-100 btn-sm" disabled>Analyze Insights</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Dashboard -->
+        <main class="col-lg-9">
+            <div id="dashboardCover" class="glass-panel d-flex flex-column align-items-center justify-content-center text-center reveal-up" style="min-height: 500px; border-style: dashed;">
+                <div class="p-5">
+                    <i class="fa-solid fa-chart-line fa-4x text-muted mb-4 text-opacity-25"></i>
+                    <h2 class="text-secondary">Select a location to unlock insights</h2>
+                    <p class="text-muted">Discover local startup success rates, failures, and AI-driven market analysis.</p>
+                </div>
+            </div>
+
+            <div id="dashboardContent" class="d-none">
+                <!-- Metric Cards -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="glass-panel text-center p-4">
+                            <span class="text-secondary small text-uppercase fw-bold">Total Startups</span>
+                            <h2 id="totalStartups" class="mb-0 mt-2 fw-800">0</h2>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="glass-panel text-center p-4">
+                            <span class="text-success small text-uppercase fw-bold">Success Rate</span>
+                            <h2 id="successRate" class="mb-0 mt-2 fw-800 text-success">0%</h2>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="glass-panel text-center p-4">
+                            <span class="text-danger small text-uppercase fw-bold">Failed Count</span>
+                            <h2 id="failedCount" class="mb-0 mt-2 fw-800 text-danger">0</h2>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="glass-panel text-center p-4">
+                            <span class="text-primary small text-uppercase fw-bold">Growth Rate</span>
+                            <h2 id="growthRate" class="mb-0 mt-2 fw-800 text-primary">0%</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <div class="glass-panel p-4 h-100">
+                            <h5 class="mb-4">Success vs Failure Distribution</h5>
+                            <canvas id="successPieChart" height="300"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="glass-panel p-4 h-100">
+                            <h5 class="mb-4">Industry Performance</h5>
+                            <canvas id="industryBarChart" height="300"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location Insights & Case Studies -->
+                <div id="insightLists" class="row g-4">
+                    <div class="col-md-6">
+                        <div class="glass-panel p-4 h-100" style="border-top: 4px solid #10b981;">
+                            <h5 class="mb-4 d-flex align-items-center gap-2">
+                                <i class="fa-solid fa-circle-check text-success"></i> Passed Startups / Opportunities
+                            </h5>
+                            <div id="startupPassList" class="custom-list">
+                                <!-- Populated via JS -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="glass-panel p-4 h-100" style="border-top: 4px solid #ef4444;">
+                            <h5 class="mb-4 d-flex align-items-center gap-2">
+                                <i class="fa-solid fa-circle-xmark text-danger"></i> Failed Startups / Cases
+                            </h5>
+                            <div id="startupFailList" class="custom-list">
+                                <!-- Populated via JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const countrySelect = document.getElementById('countrySelect');
+    const stateSelect = document.getElementById('stateSelect');
+    const citySelect = document.getElementById('citySelect');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    
+    let successPieChart, industryBarChart;
+
+    countrySelect.addEventListener('change', async (e) => {
+        const countryId = e.target.value;
+        stateSelect.innerHTML = '<option value="">Loading States...</option>';
+        stateSelect.disabled = true;
+        citySelect.disabled = true;
+        analyzeBtn.disabled = true;
+
+        if (!countryId) return;
+
+        try {
+            const res = await fetch(`/api/states/${countryId}/`);
+            const states = await res.json();
+            
+            stateSelect.innerHTML = '<option value="">Select State...</option>';
+            states.forEach(s => {
+                stateSelect.innerHTML += `<option value="${s.id}">${s.name}</option>`;
+            });
+            stateSelect.disabled = false;
+        } catch(err) { console.error(err); }
+    });
+
+    stateSelect.addEventListener('change', async (e) => {
+        const stateId = e.target.value;
+        citySelect.innerHTML = '<option value="">Loading Cities...</option>';
+        citySelect.disabled = true;
+        analyzeBtn.disabled = true;
+
+        if (!stateId) return;
+
+        try {
+            const res = await fetch(`/api/cities/${stateId}/`);
+            const cities = await res.json();
+            
+            citySelect.innerHTML = '<option value="">Select City...</option>';
+            cities.forEach(c => {
+                citySelect.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+            });
+            citySelect.disabled = false;
+        } catch(err) { console.error(err); }
+    });
+
+    citySelect.addEventListener('change', () => {
+        analyzeBtn.disabled = !citySelect.value;
+    });
+
+    analyzeBtn.addEventListener('click', async () => {
+        const cityId = citySelect.value;
+        if (!cityId) return;
+
+        analyzeBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Analyzing...';
+        analyzeBtn.disabled = true;
+
+        try {
+            const res = await fetch(`/api/city-stats/${cityId}/`);
+            const data = await res.json();
+            
+            if (data.error) {
+                alert("Data not available for this city yet.");
+                analyzeBtn.innerHTML = 'Analyze Insights';
+                analyzeBtn.disabled = false;
+                return;
+            }
+
+            document.getElementById('dashboardCover').classList.add('d-none');
+            document.getElementById('dashboardContent').classList.remove('d-none');
+
+            document.getElementById('totalStartups').innerText = data.total;
+            document.getElementById('successRate').innerText = `${data.rate.toFixed(1)}%`;
+            document.getElementById('failedCount').innerText = data.failed;
+            document.getElementById('growthRate').innerText = `${data.growth}%`;
+
+            // Populate Support/Pass List
+            const passList = document.getElementById('startupPassList');
+            passList.innerHTML = data.success_industries.map(i => `
+                <div class="list-item-pass mb-2 p-3 rounded" style="background: rgba(16, 185, 129, 0.05); border-left: 3px solid #10b981;">
+                    <div class="fw-bold text-success small mb-1"><i class="fa-solid fa-arrow-trend-up"></i> ${i}</div>
+                    <div class="text-secondary" style="font-size: 0.8rem;">High growth potential and market demand identified in this sector locally.</div>
+                </div>
+            `).join('') || '<p class="text-muted small">No specific data found.</p>';
+
+            // Populate Fail List
+            const failList = document.getElementById('startupFailList');
+            failList.innerHTML = data.city_failures.map(f => {
+                const risk = f.risk_level ? f.risk_level.toLowerCase() : 'medium';
+                return `
+                <div class="list-item-fail mb-3 p-3 rounded" style="background: rgba(239, 68, 68, 0.05); border-left: 3px solid #ef4444;">
+                    <div class="fw-bold text-danger small mb-1">${f.title}</div>
+                    <div class="text-secondary mb-2" style="font-size: 0.82rem; line-height: 1.5;">${f.description.substring(0, 140)}...</div>
+                    <div class="badge ${risk === 'high' ? 'bg-danger' : 'bg-warning text-dark'}" style="font-size: 0.65rem; text-transform: uppercase;">${f.risk_level || 'MEDIUM'} RISK</div>
+                </div>
+            `}).join('') || '<div class="glass-panel p-4 text-center text-muted small">No verified failure cases yet for this specific city.</div>';
+
+            updateCharts(data);
+            
+            // Scroll to content
+            document.getElementById('dashboardContent').scrollIntoView({ behavior: 'smooth' });
+
+        } catch(err) { 
+            console.error(err); 
+            alert("Failed to fetch insights. Please try again.");
+        } finally {
+            analyzeBtn.innerHTML = 'Analyze Insights';
+            analyzeBtn.disabled = false;
+        }
+    });
+
+    function updateCharts(data) {
+        if (successPieChart) successPieChart.destroy();
+        if (industryBarChart) industryBarChart.destroy();
+
+        const ctxPie = document.getElementById('successPieChart').getContext('2d');
+        successPieChart = new Chart(ctxPie, {
+            type: 'doughnut',
+            data: {
+                labels: ['Successful', 'Failed'],
+                datasets: [{
+                    data: [data.success, data.failed],
+                    backgroundColor: ['#10b981', '#ef4444'],
+                    borderColor: 'rgba(0,0,0,0)',
+                    hoverOffset: 10
+                }]
+            },
+            options: { cutout: '75%', plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8' } } } }
+        });
+
+        const ctxBar = document.getElementById('industryBarChart').getContext('2d');
+        industryBarChart = new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: [...data.success_industries, ...data.failed_industries],
+                datasets: [{
+                    label: 'Success Confidence',
+                    data: [...data.success_industries.map(() => 85), ...data.failed_industries.map(() => 45)],
+                    backgroundColor: [...data.success_industries.map(() => 'rgba(139, 92, 246, 0.6)'), ...data.failed_industries.map(() => 'rgba(236, 72, 153, 0.4)')],
+                    borderRadius: 5
+                }]
+            },
+            options: { 
+                indexAxis: 'y', 
+                plugins: { legend: { display: false } },
+                scales: { 
+                    x: { visible: false, grid: { display: false } },
+                    y: { ticks: { color: '#94a3b8' }, grid: { display: false } }
+                } 
+            }
+        });
+    }
+</script>
+
+<style>
+    .form-select { border-radius: 10px; padding: 0.8rem; transition: all 0.3s; }
+    .form-select:focus { border-color: var(--accent-primary); box-shadow: 0 0 10px rgba(139, 92, 246, 0.2); }
+    .gradient-text { background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .fw-800 { font-weight: 800; }
+    .border-glass { border: 1px solid rgba(255,255,255,0.05); }
+    .circular-progress-container h1 { line-height: 1; margin-bottom: 0.5rem; }
+</style>
+{% endblock %}

@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="max-width: 1200px; margin-top: 2rem;">
+    <div class="settings-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="settings-sidebar reveal-up">
+            <button class="tab-nav-btn active" onclick="showTab('account')">
+                <i class="fa-solid fa-user-gear"></i> Account Settings
+            </button>
+            <button class="tab-nav-btn" onclick="showTab('security')">
+                <i class="fa-solid fa-shield-halved"></i> Security
+            </button>
+            <button class="tab-nav-btn" onclick="showTab('notifications')">
+                <i class="fa-solid fa-bell"></i> Notifications
+            </button>
+            <button class="tab-nav-btn" onclick="showTab('subscription')">
+                <i class="fa-solid fa-credit-card"></i> Subscription
+            </button>
+            <button class="tab-nav-btn" onclick="showTab('privacy')">
+                <i class="fa-solid fa-user-shield"></i> Privacy
+            </button>
+        </aside>
+
+        <!-- Configuration Pane -->
+        <main class="settings-content">
+            
+            <!-- 1. Account Settings -->
+            <div id="account" class="tab-content-pane active">
+                <div class="settings-section">
+                    <h2><i class="fa-solid fa-user-gear"></i> Account Settings</h2>
+                    <div class="glass-panel">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="update_account">
+                            <div class="grid grid-cols-2" style="gap: 1.5rem;">
+                                <div class="form-group">
+                                    <label class="form-label">First Name</label>
+                                    <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Last Name</label>
+                                    <input type="text" name="last_name" class="form-control" value="{{ user.last_name }}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Email Address</label>
+                                    <input type="email" name="email" class="form-control" value="{{ user.email }}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">City</label>
+                                    <input type="text" name="city" class="form-control" value="{{ user.city }}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">State</label>
+                                    <input type="text" name="state" class="form-control" value="{{ user.state }}">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="margin-top: 1rem; padding: 0.7rem 2rem;">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Security Settings -->
+            <div id="security" class="tab-content-pane">
+                <div class="settings-section">
+                    <h2><i class="fa-solid fa-shield-halved"></i> Security</h2>
+                    <div class="glass-panel">
+                        <h3 style="font-size: 1.1rem; margin-bottom: 1.5rem;">Change Password</h3>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="update_security">
+                            <div class="form-group">
+                                <label class="form-label">New Password</label>
+                                <input type="password" name="new_password" class="form-control" placeholder="Minimum 8 characters">
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="padding: 0.7rem 2rem;">Update Password</button>
+                        </form>
+
+                        <hr style="margin: 2.5rem 0; border: none; border-top: 1px solid var(--border-glass);">
+
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div>
+                                <h3 style="font-size: 1.1rem; margin-bottom: 0.3rem;">Two-Factor Authentication</h3>
+                                <p style="color: var(--text-secondary); font-size: 0.9rem;">Add an extra layer of security to your account.</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" {% if user.two_factor_enabled %}checked{% endif %}>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Notification Settings -->
+            <div id="notifications" class="tab-content-pane">
+                <div class="settings-section">
+                    <h2><i class="fa-solid fa-bell"></i> Notifications</h2>
+                    <div class="glass-panel">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="update_notifications">
+                            <div style="display: flex; flex-direction: column; gap: 2rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <h3 style="font-size: 1.1rem; margin-bottom: 0.3rem;">Email Notifications</h3>
+                                        <p style="color: var(--text-secondary); font-size: 0.9rem;">Get weekly digests of your startup activity.</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" name="email_alerts" {% if user.email_alerts_enabled %}checked{% endif %}>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <h3 style="font-size: 1.1rem; margin-bottom: 0.3rem;">AI Analysis Alerts</h3>
+                                        <p style="color: var(--text-secondary); font-size: 0.9rem;">Instant notifications when a new analysis is ready.</p>
+                                    </div>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" name="ai_notifications" {% if user.ai_notifications_enabled %}checked{% endif %}>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <button type="submit" class="btn btn-primary" style="align-self: flex-start; margin-top: 1rem;">Update Preferences</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Subscription Settings -->
+            <div id="subscription" class="tab-content-pane">
+                <div class="settings-section">
+                    <h2><i class="fa-solid fa-credit-card"></i> Subscription</h2>
+                    <div class="glass-panel" style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), rgba(6, 182, 212, 0.05));">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <div>
+                                <h3 style="font-size: 1.3rem; margin-bottom: 0.3rem;">
+                                    {% if user.is_premium %}Premium Analyst Plan{% else %}Free Basic Plan{% endif %}
+                                </h3>
+                                <p style="color: var(--text-muted); font-size: 0.9rem;">Enjoy comprehensive AI signals and deeper pattern analysis.</p>
+                            </div>
+                            <span class="badge-premium" style="font-size: 0.85rem; padding: 8px 16px;">
+                                {% if user.is_premium %}ACTIVE{% else %}LIMITED{% endif %}
+                            </span>
+                        </div>
+                        
+                        <div style="display: flex; gap: 1rem;">
+                            {% if not user.is_premium %}
+                                <a href="{% url 'pricing' %}" class="btn btn-primary">Upgrade Plan</a>
+                            {% else %}
+                                <button class="btn btn-outline" style="color: var(--danger); border-color: var(--danger);">Cancel Subscription</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Privacy Settings -->
+            <div id="privacy" class="tab-content-pane">
+                <div class="settings-section">
+                    <h2><i class="fa-solid fa-user-shield"></i> Privacy</h2>
+                    <div class="glass-panel">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                            <div>
+                                <h3 style="font-size: 1.1rem; margin-bottom: 0.3rem;">Public Profile</h3>
+                                <p style="color: var(--text-secondary); font-size: 0.9rem;">Allow others to see your startup journey and achievements.</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" {% if user.public_profile %}checked{% endif %}>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div style="margin-top: 3.5rem; padding: 2rem; border-radius: var(--radius-md); border: 1px solid rgba(239, 68, 68, 0.2); background: rgba(239, 68, 68, 0.02);">
+                            <h3 style="color: var(--danger); font-size: 1.1rem; margin-bottom: 0.5rem;"><i class="fa-solid fa-triangle-exclamation"></i> Danger Zone</h3>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">Permanently delete your account and all associated startup intelligence data.</p>
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete_account">
+                                <button type="submit" onclick="return confirm('CRITICAL: Are you sure you want to delete your account?')" class="btn btn-outline" style="color: var(--danger); border-color: var(--danger);">Delete Account</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<script>
+    function showTab(tabId) {
+        document.querySelectorAll('.tab-nav-btn').forEach(btn => btn.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+        document.querySelectorAll('.tab-content-pane').forEach(pane => pane.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+    }
+</script>
+{% endblock %}

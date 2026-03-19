@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h2><i class="fa-solid fa-book-journal-whills"></i> My Failure History</h2>
+        <a href="{% url 'add_failure' %}" class="btn btn-primary">Add New</a>
+    </div>
+
+    <div class="glass-panel slide-in" style="padding: 0;">
+        <table style="width: 100%; text-align: left; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 1px solid var(--border-glass); background: rgba(255,255,255,0.02);">
+                    <th style="padding: 1.2rem;">Title</th>
+                    <th style="padding: 1.2rem;">Submitted Date</th>
+                    <th style="padding: 1.2rem;">Visibility</th>
+                    <th style="padding: 1.2rem;">AI Risk Level</th>
+                    <th style="padding: 1.2rem; text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for failure in failures %}
+                <tr style="border-bottom: 1px solid var(--border-glass);">
+                    <td style="padding: 1.2rem; font-weight: 500;">{{ failure.title }}</td>
+                    <td style="padding: 1.2rem; color: var(--text-secondary);"><span class="local-time" data-timestamp="{{ failure.date_submitted|date:'c' }}">{{ failure.date_submitted|date:"F d, Y H:i" }}</span></td>
+                    <td style="padding: 1.2rem;">
+                        {% if failure.is_public %}
+                            <span style="color: var(--info); font-size: 0.85rem;"><i class="fa-solid fa-earth-americas"></i> Public</span>
+                        {% else %}
+                            <span style="color: var(--text-muted); font-size: 0.85rem;"><i class="fa-solid fa-lock"></i> Private</span>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 1rem;">
+                        {% if failure.analysis %}
+                            {% if failure.analysis.risk_level == 'HIGH' %}
+                                <span style="color: var(--danger);">
+                            {% elif failure.analysis.risk_level == 'MEDIUM' %}
+                                <span style="color: var(--warning);">
+                            {% else %}
+                                <span style="color: var(--success);">
+                            {% endif %}
+                                {{ failure.analysis.get_risk_level_display }}
+                            </span>
+                        {% else %}
+                            <span style="color: var(--text-muted);">N/A</span>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 1.2rem; text-align: right;">
+                        <a href="{% url 'failure_details' failure.id %}" class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">View Analysis</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="padding: 1.2rem; text-align: center; color: var(--text-secondary);">No history available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

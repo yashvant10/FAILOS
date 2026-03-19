@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block extra_head %}
+<style>
+    .demo-banner {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        padding: 1rem 2rem;
+        text-align: center;
+        color: #fff;
+        font-weight: 600;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+    }
+    .demo-banner a {
+        background: #fff;
+        color: #764ba2;
+        padding: 0.4rem 1.2rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+    .demo-banner a:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .demo-badge {
+        display: inline-block;
+        background: rgba(255,255,255,0.2);
+        padding: 0.15rem 0.6rem;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-left: 0.5rem;
+    }
+    .demo-overlay {
+        position: relative;
+    }
+    .demo-overlay::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 120px;
+        background: linear-gradient(to top, var(--bg-primary), transparent);
+        pointer-events: none;
+        z-index: 5;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Demo Banner -->
+<div class="demo-banner">
+    <i class="fa-solid fa-eye"></i>
+    You are viewing a demo dashboard. Sign up to access your own personalized dashboard.
+    <a href="{% url 'signup' %}"><i class="fa-solid fa-rocket"></i> Sign Up Free</a>
+</div>
+
+<div class="container demo-overlay">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; margin-top: 1rem;">
+        <h2>Dashboard <span class="demo-badge">DEMO</span></h2>
+        <a href="{% url 'login' %}" class="btn btn-primary"><i class="fa-solid fa-right-to-bracket"></i> Login to Submit Ideas</a>
+    </div>
+
+    <div class="grid grid-cols-3" style="margin-bottom: 3rem;">
+        <div class="glass-panel">
+            <h3 style="color: var(--text-secondary); font-size: 1rem;"><i class="fa-solid fa-folder-open"></i> Total Failures</h3>
+            <p style="font-size: 2.5rem; font-weight: 700; color: var(--accent-secondary);">12</p>
+        </div>
+        <div class="glass-panel">
+            <h3 style="color: var(--text-secondary); font-size: 1rem;"><i class="fa-solid fa-robot"></i> AI Analyses</h3>
+            <p style="font-size: 2.5rem; font-weight: 700; color: var(--success);">12</p>
+        </div>
+        <div class="glass-panel">
+            <h3 style="color: var(--text-secondary); font-size: 1rem;"><i class="fa-solid fa-star"></i> Subscription</h3>
+            <p style="font-size: 1.5rem; font-weight: 600; color: var(--warning); margin-top: 0.5rem;">FREE</p>
+            <a href="{% url 'pricing' %}" style="font-size: 0.85rem;">Upgrade Plan &rarr;</a>
+        </div>
+    </div>
+
+    <h3>Sample Ideas & Results</h3>
+    <div class="glass-panel" style="padding: 0;">
+        <table style="width: 100%; text-align: left; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 1px solid var(--border-glass);">
+                    <th style="padding: 1rem;">Project Title</th>
+                    <th style="padding: 1rem;">Date</th>
+                    <th style="padding: 1rem;">Risk Level</th>
+                    <th style="padding: 1rem;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="border-bottom: 1px solid var(--border-glass);">
+                    <td style="padding: 1rem;">Coffee Shop Startup</td>
+                    <td style="padding: 1rem;">Mar 10, 2026</td>
+                    <td style="padding: 1rem;"><span style="color: var(--danger);">High Risk</span></td>
+                    <td style="padding: 1rem;">
+                        <a href="{% url 'login' %}" class="btn btn-outline" style="padding: 0.3rem 0.8rem; font-size: 0.85rem;">Login to View</a>
+                    </td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-glass);">
+                    <td style="padding: 1rem;">Food Delivery App</td>
+                    <td style="padding: 1rem;">Mar 08, 2026</td>
+                    <td style="padding: 1rem;"><span style="color: var(--warning);">Medium Risk</span></td>
+                    <td style="padding: 1rem;">
+                        <a href="{% url 'login' %}" class="btn btn-outline" style="padding: 0.3rem 0.8rem; font-size: 0.85rem;">Login to View</a>
+                    </td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-glass);">
+                    <td style="padding: 1rem;">Freelance Consulting Agency</td>
+                    <td style="padding: 1rem;">Mar 05, 2026</td>
+                    <td style="padding: 1rem;"><span style="color: var(--success);">Low Risk</span></td>
+                    <td style="padding: 1rem;">
+                        <a href="{% url 'login' %}" class="btn btn-outline" style="padding: 0.3rem 0.8rem; font-size: 0.85rem;">Login to View</a>
+                    </td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-glass);">
+                    <td style="padding: 1rem;">Blockchain SaaS Platform</td>
+                    <td style="padding: 1rem;">Mar 02, 2026</td>
+                    <td style="padding: 1rem;"><span style="color: var(--danger);">High Risk</span></td>
+                    <td style="padding: 1rem;">
+                        <a href="{% url 'login' %}" class="btn btn-outline" style="padding: 0.3rem 0.8rem; font-size: 0.85rem;">Login to View</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 1rem;">Newsletter Business</td>
+                    <td style="padding: 1rem;">Feb 28, 2026</td>
+                    <td style="padding: 1rem;"><span style="color: var(--success);">Low Risk</span></td>
+                    <td style="padding: 1rem;">
+                        <a href="{% url 'login' %}" class="btn btn-outline" style="padding: 0.3rem 0.8rem; font-size: 0.85rem;">Login to View</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="padding: 1.5rem; text-align: center;">
+            <a href="{% url 'signup' %}" class="btn btn-primary" style="padding: 0.6rem 2rem;">
+                <i class="fa-solid fa-rocket"></i> Sign Up to Access Full Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

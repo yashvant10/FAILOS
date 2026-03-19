@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h2>Dashboard</h2>
+        <a href="{% url 'add_failure' %}" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Submit New Idea</a>
+    </div>
+
+    <div class="dashboard-grid">
+        <div class="stat-card failures">
+            <div>
+                <h3 class="stat-label"><i class="fa-solid fa-folder-open"></i> Total Failures</h3>
+                <p class="stat-value">{{ user.failures.count|default:"0" }}</p>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">Stored Intelligence</p>
+        </div>
+
+        <div class="stat-card analyses">
+            <div>
+                <h3 class="stat-label"><i class="fa-solid fa-robot"></i> AI Analyses</h3>
+                <p class="stat-value">{{ ai_analysis_count|default:user.failures.count|default:"0" }}</p>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">Processed Insights</p>
+        </div>
+
+        <div class="stat-card subscription">
+            <div>
+                <h3 class="stat-label"><i class="fa-solid fa-star"></i> Subscription</h3>
+                <p class="stat-value">{% if user.is_premium %}PREMIUM{% else %}FREE{% endif %}</p>
+            </div>
+            <a href="{% url 'pricing' %}" class="btn btn-outline" style="font-size: 0.8rem; padding: 0.4rem 1rem; margin-top: 1rem; width: fit-content;">Upgrade &rarr;</a>
+        </div>
+    </div>
+
+    <h3 style="margin-bottom: 1.5rem; font-weight: 800;">Recent Intelligence <span style="color: var(--text-muted); font-weight: 400; font-size: 1rem;">/ Failures</span></h3>
+    <div class="glass-card" style="padding: 1.5rem; border-radius: var(--radius-lg);">
+        <table style="width: 100%; text-align: left; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 1px solid var(--border-glass);">
+                    <th style="padding: 1rem;">Project Title</th>
+                    <th style="padding: 1rem;">Date</th>
+                    <th style="padding: 1rem;">Risk Level</th>
+                    <th style="padding: 1rem;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for failure in recent_failures %}
+                <tr style="border-bottom: 1px solid var(--border-glass);">
+                    <td style="padding: 1rem;">{{ failure.title }}</td>
+                    <td style="padding: 1rem;"><span class="local-time" data-timestamp="{{ failure.date_submitted|date:'c' }}">{{ failure.date_submitted|date:"F d, Y H:i" }}</span></td>
+                    <td style="padding: 1rem;">
+                        {% if failure.analysis %}
+                            {% if failure.analysis.risk_level == 'HIGH' %}
+                                <span style="color: var(--danger);">
+                            {% elif failure.analysis.risk_level == 'MEDIUM' %}
+                                <span style="color: var(--warning);">
+                            {% else %}
+                                <span style="color: var(--success);">
+                            {% endif %}
+                                {{ failure.analysis.get_risk_level_display }}
+                            </span>
+                        {% else %}
+                            <span style="color: var(--text-muted);">N/A</span>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 1rem;">
+                        <a href="{% url 'failure_details' failure.id %}" class="btn btn-outline" style="padding: 0.3rem 0.8rem; font-size: 0.85rem;">View Analysis</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="padding: 1rem; text-align: center; color: var(--text-secondary);">No ideas submitted yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div style="padding: 1rem; text-align: center;">
+            <a href="{% url 'history' %}" style="font-size: 0.9rem;">View All History</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

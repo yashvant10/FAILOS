@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div style="text-align: center; margin-bottom: 3rem;">
+        <h2><i class="fa-solid fa-gem" style="color: var(--warning);"></i> Choose Your Plan</h2>
+        <p style="color: var(--text-secondary);">Unlock the full power of the AI Agent and Startup Data Insights.</p>
+    </div>
+
+    <div class="grid grid-cols-3">
+        <!-- Basic -->
+        <div class="glass-panel slide-in" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <h3>Basic <span style="font-size: 0.9rem; font-weight: normal; color: var(--text-muted);">(Free)</span></h3>
+                <h2 style="font-size: 2.5rem; margin-top: 1rem;">$0<span style="font-size: 1rem; color: var(--text-secondary);">/mo</span></h2>
+                <ul style="margin-top: 2rem; list-style-type: none; padding: 0; color: var(--text-secondary); line-height: 2;">
+                    <li><i class="fa-solid fa-check" style="color: var(--success); margin-right: 0.5rem;"></i> Max 3 Failure Records</li>
+                    <li><i class="fa-solid fa-check" style="color: var(--success); margin-right: 0.5rem;"></i> Basic AI Analysis</li>
+                    <li><i class="fa-solid fa-xmark" style="color: var(--danger); margin-right: 0.5rem;"></i> No Startup Insights</li>
+                </ul>
+            </div>
+            <a href="{% url 'signup' %}" class="btn btn-outline" style="margin-top: 2rem; width: 100%;">Current Plan</a>
+        </div>
+
+        <!-- Standard -->
+        <div class="glass-panel slide-in" style="border-color: var(--accent-primary); position: relative; display: flex; flex-direction: column; justify-content: space-between;">
+            <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--accent-primary); color: #fff; padding: 0.2rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: bold;">POPULAR</div>
+            <div>
+                <h3 style="color: var(--accent-secondary);">Standard</h3>
+                <h2 style="font-size: 2.5rem; margin-top: 1rem;">$9<span style="font-size: 1rem; color: var(--text-secondary);">/mo</span></h2>
+                <ul style="margin-top: 2rem; list-style-type: none; padding: 0; color: var(--text-secondary); line-height: 2;">
+                    <li><i class="fa-solid fa-check" style="color: var(--success); margin-right: 0.5rem;"></i> Unlimited Records</li>
+                    <li><i class="fa-solid fa-check" style="color: var(--success); margin-right: 0.5rem;"></i> Advanced AI Suggestions</li>
+                    <li><i class="fa-solid fa-check" style="color: var(--success); margin-right: 0.5rem;"></i> Regional Startup Insights</li>
+                </ul>
+            </div>
+            <a href="{% url 'payment' %}" class="btn btn-primary pulse-hover" style="margin-top: 2rem; width: 100%;">Upgrade</a>
+        </div>
+
+        <!-- Premium -->
+        <div class="glass-panel slide-in" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <h3>Premium</h3>
+                <h2 style="font-size: 2.5rem; margin-top: 1rem;">$19<span style="font-size: 1rem; color: var(--text-secondary);">/mo</span></h2>
+                <ul style="margin-top: 2rem; list-style-type: none; padding: 0; color: var(--text-secondary); line-height: 2;">
+                    <li><i class="fa-solid fa-check" style="color: var(--success); margin-right: 0.5rem;"></i> Unlimited Everything</li>
+                    <li><i class="fa-solid fa-check" style="color: var(--success); margin-right: 0.5rem;"></i> Dedicated AI Coaching</li>
+                    <li><i class="fa-solid fa-check" style="color: var(--success); margin-right: 0.5rem;"></i> Analytics Export</li>
+                </ul>
+            </div>
+            <a href="{% url 'payment' %}" class="btn btn-outline" style="border-color: var(--warning); color: var(--warning); margin-top: 2rem; width: 100%;">Upgrade</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

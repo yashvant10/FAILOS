@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div style="text-align: center; margin-bottom: 3rem;">
+        <h2><i class="fa-solid fa-clipboard-check"></i> Idea Outcomes Matrix</h2>
+        <p style="color: var(--text-secondary);">See how different concepts perform in the real world based on historical logic.</p>
+    </div>
+
+    <div class="grid grid-cols-2">
+        <div class="glass-panel slide-in" style="border-left: 4px solid var(--success);">
+            <h3 style="color: var(--success);"><i class="fa-solid fa-check"></i> Common Passed Patterns</h3>
+            <ul style="color: var(--text-secondary); margin-top: 1rem; line-height: 1.8;">
+                <li>B2B SaaS with high switching costs</li>
+                <li>Hyper-niche e-commerce with low setup costs</li>
+                <li>Workflow automation for legacy industries</li>
+            </ul>
+        </div>
+        
+        <div class="glass-panel slide-in" style="border-left: 4px solid var(--danger);">
+            <h3 style="color: var(--danger);"><i class="fa-solid fa-xmark"></i> Common Failed Patterns</h3>
+            <ul style="color: var(--text-secondary); margin-top: 1rem; line-height: 1.8;">
+                <li>Local delivery without dense population</li>
+                <li>Social networks without a cold-start strategy</li>
+                <li>Hardware products with unvalidated demand</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_head %}
+<style>
+    .home-dashboard {
+        padding: 0 0 2rem;
+    }
+    
+    .dashboard-header {
+        margin-bottom: 3rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .welcome-text h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+    }
+    
+    .welcome-text p {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+    }
+    
+    .action-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+        margin-bottom: 4rem;
+    }
+    
+    .action-card {
+        padding: 2.5rem;
+        background: var(--bg-glass);
+        border: 1px solid var(--border-glass);
+        border-radius: var(--radius-lg);
+        transition: var(--transition);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 250px;
+    }
+    
+    .action-card:hover {
+        transform: translateY(-8px);
+        border-color: var(--accent-primary);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    }
+    
+    .action-icon {
+        font-size: 2.5rem;
+        color: var(--accent-primary);
+        margin-bottom: 1.5rem;
+    }
+    
+    .action-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+    
+    .action-desc {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+    }
+    
+    .founder-tip-card {
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(6, 182, 212, 0.1));
+        border: 1px solid var(--border-glow);
+        border-radius: var(--radius-lg);
+        padding: 3rem;
+        text-align: center;
+    }
+    
+    .tip-icon {
+        font-size: 3rem;
+        color: var(--accent-secondary);
+        margin-bottom: 1.5rem;
+    }
+    
+    .tip-content {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .tip-quote {
+        font-size: 1.5rem;
+        font-weight: 600;
+        font-style: italic;
+        margin-bottom: 1rem;
+    }
+    
+    .tip-author {
+        color: var(--text-muted);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container home-dashboard">
+    <div class="dashboard-header reveal-up">
+        <div class="welcome-text">
+            <h1>Welcome back, <span class="highlight">{{ user.first_name|default:user.username }}</span></h1>
+            <p>Your startup intelligence dashboard is ready.</p>
+        </div>
+        <div>
+            <a href="{% url 'add_failure' %}" class="btn btn-primary">
+                <i class="fa-solid fa-plus"></i> New Analysis
+            </a>
+        </div>
+    </div>
+
+    <div class="action-grid">
+        <div class="action-card reveal-up delay-1">
+            <div>
+                <i class="fa-solid fa-brain action-icon"></i>
+                <h3 class="action-title">Analyze New Idea</h3>
+                <p class="action-desc">Run a full AI diagnostic on your latest startup concept to identify potential risks.</p>
+            </div>
+            <a href="{% url 'add_failure' %}" class="btn btn-outline" style="width: 100%;">Get Started</a>
+        </div>
+        
+        <div class="action-card reveal-up delay-2">
+            <div>
+                <i class="fa-solid fa-clock-rotate-left action-icon"></i>
+                <h3 class="action-title">Review Past Failures</h3>
+                <p class="action-desc">Check your history of analyzed ideas and see how they compare against market trends.</p>
+            </div>
+            <a href="{% url 'history' %}" class="btn btn-outline" style="width: 100%;">View History</a>
+        </div>
+        
+        <div class="action-card reveal-up delay-3">
+            <div>
+                <i class="fa-solid fa-chart-simple action-icon"></i>
+                <h3 class="action-title">Market Demand</h3>
+                <p class="action-desc">Check the demand score for various industries in your target location.</p>
+            </div>
+            <a href="{% url 'dashboard' %}" class="btn btn-outline" style="width: 100%;">Explore Analytics</a>
+        </div>
+
+        <div class="action-card reveal-up delay-4">
+            <div>
+                <i class="fa-solid fa-map-location-dot action-icon"></i>
+                <h3 class="action-title">Startup Success Map</h3>
+                <p class="action-desc">Explore which startup ideas succeed or fail in different locations globally.</p>
+            </div>
+            <a href="{% url 'startup_insights' %}" class="btn btn-outline" style="width: 100%;">View Success Map</a>
+        </div>
+    </div>
+
+    <section class="founder-tip-card reveal-up delay-4">
+        <div class="tip-content">
+            <i class="fa-solid fa-lightbulb tip-icon"></i>
+            <p class="tip-quote">"Success consists of going from failure to failure without loss of enthusiasm."</p>
+            <p class="tip-author">— Winston Churchill</p>
+            <p style="margin-top: 1.5rem; color: var(--text-secondary);">Today's insight: Most Bangalore startups fail due to high burn rates in early months. Consider a lean MVP approach.</p>
+        </div>
+    </section>
+</div>
+{% endblock %}

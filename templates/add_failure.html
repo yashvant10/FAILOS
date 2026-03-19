@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="glass-panel slide-in" style="max-width: 800px; margin: 0 auto;">
+        <h2 style="margin-bottom: 1rem;"><i class="fa-solid fa-lightbulb"></i> Submit a Failure</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">Describe your failed project or idea in detail. Our AI will analyze the core failures and suggest improvements.</p>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="form-label">Project / Idea Title</label>
+                <input type="text" name="title" class="form-control" placeholder="e.g., Local Food Delivery App" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">What went wrong? (Description)</label>
+                <textarea name="description" class="form-control" rows="8" placeholder="Describe the market size, your approach, what failed, and any hypotheses you have." required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Country</label>
+                <select id="country-select" class="form-control" required>
+                    <option value="">Select Country</option>
+                    {% for country in countries %}
+                    <option value="{{ country.id }}">{{ country.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="grid grid-cols-2" style="gap: 1rem; margin-bottom: 1rem;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label">State</label>
+                    <select id="state-select" name="state_id" class="form-control" required disabled>
+                        <option value="">Select State</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label">City</label>
+                    <select id="city-select" name="city_id" class="form-control" required disabled>
+                        <option value="">Select City</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Estimated Budget (₹)</label>
+                <input type="number" name="budget" class="form-control" placeholder="e.g., 50000" min="0" required>
+            </div>
+            
+            <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="checkbox" name="is_public" id="is_public">
+                <label for="is_public" style="color: var(--text-secondary); cursor: pointer;">Make this record public so others can learn from it</label>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button type="submit" class="btn btn-primary pulse-hover"><i class="fa-solid fa-robot"></i> Analyze with AI</button>
+                <a href="{% url 'dashboard' %}" class="btn btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const countrySelect = document.getElementById('country-select');
+    const stateSelect = document.getElementById('state-select');
+    const citySelect = document.getElementById('city-select');
+
+    countrySelect.addEventListener('change', function() {
+        const countryId = this.value;
+        stateSelect.innerHTML = '<option value="">Select State</option>';
+        citySelect.innerHTML = '<option value="">Select City</option>';
+        citySelect.disabled = true;
+
+        if (countryId) {
+            fetch(`/get-states/${countryId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(state => {
+                        const option = document.createElement('option');
+                        option.value = state.id;
+                        option.textContent = state.name;
+                        stateSelect.appendChild(option);
+                    });
+                    stateSelect.disabled = false;
+                });
+        } else {
+            stateSelect.disabled = true;
+        }
+    });
+
+    stateSelect.addEventListener('change', function() {
+        const stateId = this.value;
+        citySelect.innerHTML = '<option value="">Select City</option>';
+
+        if (stateId) {
+            fetch(`/get-cities/${stateId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(city => {
+                        const option = document.createElement('option');
+                        option.value = city.id;
+                        option.textContent = city.name;
+                        citySelect.appendChild(option);
+                    });
+                    citySelect.disabled = false;
+                });
+        } else {
+            citySelect.disabled = true;
+        }
+    });
+</script>
+{% endblock %}

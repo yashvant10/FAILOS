@@ -1,0 +1,408 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_head %}
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+    /* ==================== DESIGN SYSTEM - FLUID GRADIENT ==================== */
+    :root {
+        --white: #ffffff;
+        --hero-gradient: radial-gradient(circle at top right, rgba(139, 92, 246, 0.15), transparent 40%),
+                         radial-gradient(circle at bottom left, rgba(6, 182, 212, 0.1), transparent 40%);
+    }
+
+    body.dark-theme {
+        background: var(--bg-main);
+        background-image: var(--hero-gradient);
+        font-family: 'Poppins', sans-serif;
+        color: var(--white);
+        overflow-x: hidden;
+    }
+
+    /* ==================== BLOBS / ORGANIC SHAPES ==================== */
+    .blob-container {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+    }
+    .blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.5;
+        animation: float 8s ease-in-out infinite;
+    }
+    .blob-1 { width: 500px; height: 500px; background: rgba(168, 85, 247, 0.4); top: -10%; right: -5%; }
+    .blob-2 { width: 400px; height: 400px; background: rgba(99, 102, 241, 0.35); top: 30%; left: -8%; }
+    .blob-3 { width: 350px; height: 350px; background: rgba(192, 132, 252, 0.3); bottom: 10%; right: 10%; }
+    @keyframes float {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        33% { transform: translate(30px, -30px) scale(1.05); }
+        66% { transform: translate(-20px, 20px) scale(0.95); }
+    }
+
+    /* ==================== SECTIONS ==================== */
+    .landing-section {
+        position: relative;
+        z-index: 2;
+        padding: 6rem 2rem;
+    }
+    .landing-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .section-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: var(--white);
+        padding: 0.4rem 1.2rem;
+        border-radius: var(--radius-pill);
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 1.5rem;
+    }
+    .section-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        color: var(--white);
+        line-height: 1.1;
+        margin-bottom: 1.5rem;
+        letter-spacing: -1px;
+    }
+    .section-subtitle {
+        font-size: 1.25rem;
+        color: var(--text-secondary);
+        line-height: 1.7;
+        max-width: 700px;
+        margin-bottom: 2rem;
+    }
+    .text-center { text-align: center; }
+    .mx-auto { margin-left: auto; margin-right: auto; }
+
+    /* ==================== GLASS CARDS ==================== */
+    .glass-card {
+        background: var(--bg-glass);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border: 1px solid var(--border-glass);
+        border-radius: var(--radius-lg);
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+    }
+    .glass-card:hover {
+        background: rgba(255, 255, 255, 0.05);
+        transform: translateY(-8px);
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        border-color: var(--accent-primary);
+    }
+
+    /* ==================== BUTTONS ==================== */
+    .btn-landing {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 1.1rem 2.5rem;
+        border-radius: var(--radius-pill);
+        font-weight: 700;
+        font-size: 1.1rem;
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        border: none;
+        font-family: inherit;
+    }
+    .btn-white { background: var(--white); color: var(--bg-main); }
+    .btn-white:hover { transform: translateY(-3px); box-shadow: 0 12px 35px rgba(255, 255, 255, 0.2); }
+    .btn-glass { background: rgba(255, 255, 255, 0.15); color: var(--white); border: 1px solid rgba(255, 255, 255, 0.3); backdrop-filter: blur(10px); }
+    .btn-glass:hover { background: rgba(255, 255, 255, 0.25); transform: translateY(-3px); }
+
+    /* ==================== 1. HERO (Refined Text-Only) ==================== */
+    .hero {
+        padding: 12rem 2rem 10rem;
+        position: relative;
+        z-index: 2;
+        text-align: center;
+    }
+    .hero h1 {
+        font-size: 5rem;
+        font-weight: 900;
+        color: var(--white);
+        line-height: 1.05;
+        margin-bottom: 2.5rem;
+        letter-spacing: -2.5px;
+    }
+
+    /* ==================== GRID SYSTEM ==================== */
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-top: 4rem;
+    }
+    .feature-card { padding: 3rem 2rem; text-align: center; }
+    .feature-icon {
+        width: 70px; height: 70px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.8rem; margin: 0 auto 1.5rem;
+        color: var(--accent-primary);
+    }
+
+    /* ==================== HIW ==================== */
+    .hiw-steps {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 3rem;
+        margin-top: 4rem;
+    }
+    .hiw-number {
+        width: 60px; height: 60px;
+        border-radius: 50%;
+        background: var(--white);
+        color: var(--bg-main);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.5rem; font-weight: 800; margin: 0 auto 1.5rem;
+    }
+
+    /* ==================== STATS ==================== */
+    .stats-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        text-align: center;
+        padding: 4rem 0;
+    }
+    .stat-number { font-size: 3.5rem; font-weight: 900; color: var(--accent-secondary); }
+
+    /* ==================== AI DEMO ==================== */
+    .demo-container { max-width: 900px; margin: 4rem auto 0; }
+    .demo-window {
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid var(--border-glass);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow: 0 40px 100px rgba(0,0,0,0.4);
+    }
+    .demo-header { background: rgba(255,255,255,0.05); padding: 1rem 1.5rem; display: flex; align-items: center; gap: 0.8rem; border-bottom: 1px solid var(--border-glass); }
+    .demo-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .demo-body { padding: 2.5rem; }
+    .demo-metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+    .demo-metric { background: rgba(0,0,0,0.2); padding: 1.2rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass); }
+    .demo-label { font-size: 0.8rem; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 0.5rem; }
+    .demo-value { font-size: 1.8rem; font-weight: 800; }
+    .demo-suggestion { background: rgba(139, 92, 246, 0.1); border-left: 4px solid var(--accent-primary); padding: 1.5rem; border-radius: 0 var(--radius-md) var(--radius-md) 0; }
+
+    /* ==================== ANIMATIONS ==================== */
+    .reveal-up {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal-up.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+        .hero h1 { font-size: 2.5rem; }
+        .section-title { font-size: 2rem; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="blob-container">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+</div>
+
+<!-- ========== 1. HERO ========== -->
+<section class="hero">
+    <div class="landing-container">
+        <div class="reveal-up active">
+            <span class="section-eyebrow"><i class="fa-solid fa-sparkles"></i> AI-Powered Startup Intelligence</span>
+            <h1>Learn From Failed Startups <br><span class="gradient-text">Before You Build Yours</span></h1>
+            <p class="section-subtitle mx-auto">FAILOS AI analyzes startup ideas, budgets, and market demand using AI to predict risks and identify failure patterns before you invest a single rupee.</p>
+            <div class="hero-buttons">
+                <a href="{% url 'add_failure' %}" class="btn-landing btn-white">
+                    <i class="fa-solid fa-brain"></i> Try AI Idea Analyzer
+                </a>
+                <a href="{% url 'startup_insights' %}" class="btn-landing btn-glass">
+                    <i class="fa-solid fa-map-location-dot"></i> Explore Startup Insights
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== 2. PROBLEM (WHY FAIL) ========== -->
+<section class="landing-section">
+    <div class="landing-container">
+        <div class="text-center reveal-up">
+            <span class="section-eyebrow"><i class="fa-solid fa-triangle-exclamation"></i> The Reality</span>
+            <h2 class="section-title">Why Do 90% of Startups Fail?</h2>
+            <p class="section-subtitle mx-auto">Founders keep losing money on ideas that have already failed before.</p>
+        </div>
+        <div class="feature-grid">
+            <div class="glass-card feature-card reveal-up">
+                <div class="feature-icon" style="color:var(--danger);"><i class="fa-solid fa-map-pin"></i></div>
+                <h3>Poor Planning</h3>
+                <p>Lack of market research and structural preparation leads to early collapse.</p>
+            </div>
+            <div class="glass-card feature-card reveal-up">
+                <div class="feature-icon" style="color:var(--danger);"><i class="fa-solid fa-wallet"></i></div>
+                <h3>Low Budget</h3>
+                <p>Miscalculating operational costs leaves founders with zero runway.</p>
+            </div>
+            <div class="glass-card feature-card reveal-up">
+                <div class="feature-icon" style="color:var(--danger);"><i class="fa-solid fa-ghost"></i></div>
+                <h3>Ignoring History</h3>
+                <p>Repeating mistakes that hundreds of founders already made before.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== 3. SOLUTIONS ========== -->
+<section class="landing-section">
+    <div class="landing-container">
+        <div class="text-center reveal-up">
+            <span class="section-eyebrow"><i class="fa-solid fa-star"></i> Our Solution</span>
+            <h2 class="section-title">Smarter Startup Validation</h2>
+        </div>
+        <div class="feature-grid">
+            <div class="glass-card feature-card reveal-up">
+                <div class="feature-icon"><i class="fa-solid fa-brain"></i></div>
+                <h3>AI Failure Analysis</h3>
+                <p>Deep scan of your idea to find potential structural weaknesses.</p>
+            </div>
+            <div class="glass-card feature-card reveal-up">
+                <div class="feature-icon"><i class="fa-solid fa-check-double"></i></div>
+                <h3>Feasibility Checker</h3>
+                <p>Validates if your resources align with your goals.</p>
+            </div>
+            <div class="glass-card feature-card reveal-up">
+                <div class="feature-icon"><i class="fa-solid fa-bolt-lightning"></i></div>
+                <h3>Demand Prediction</h3>
+                <p>AI-driven estimation of how many people need your product.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== 4. HOW IT WORKS ========== -->
+<section class="landing-section">
+    <div class="landing-container">
+        <div class="text-center reveal-up">
+            <span class="section-eyebrow">How It Works</span>
+            <h2 class="section-title">Analyze in 3 Steps</h2>
+        </div>
+        <div class="hiw-steps">
+            <div class="reveal-up">
+                <div class="hiw-number">1</div>
+                <h3>Submit your startup idea</h3>
+                <p>Briefly describe what you want to build and where.</p>
+            </div>
+            <div class="reveal-up">
+                <div class="hiw-number">2</div>
+                <h3>AI analyzes market</h3>
+                <p>Our agent scans thousands of signals to assess viability.</p>
+            </div>
+            <div class="reveal-up">
+                <div class="hiw-number">3</div>
+                <h3>Get risk prediction</h3>
+                <p>Receive a full report with suggestions for improvement.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== 5. AI DEMO ========== -->
+<section class="landing-section">
+    <div class="landing-container">
+        <div class="text-center reveal-up">
+            <span class="section-eyebrow">Interactive Demo</span>
+            <h2 class="section-title">See AI in Action</h2>
+            <p class="section-subtitle mx-auto">Here is how FAILOS AI analyzed a real startup idea: "Luxury Coffee Shop in Bangalore".</p>
+        </div>
+        <div class="demo-container reveal-up">
+            <div class="demo-window">
+                <div class="demo-header">
+                    <div class="demo-dot" style="background: #ff5f56;"></div>
+                    <div class="demo-dot" style="background: #ffbd2e;"></div>
+                    <div class="demo-dot" style="background: #27c93f;"></div>
+                    <span style="font-size: 0.9rem; color: var(--text-muted); margin-left: 1rem;">analysis_report_v2.pdf</span>
+                </div>
+                <div class="demo-body">
+                    <div class="demo-metric-grid">
+                        <div class="demo-metric">
+                            <div class="demo-label">Startup Viability</div>
+                            <div class="demo-value" style="color: var(--warning);">42% (RISKY)</div>
+                        </div>
+                        <div class="demo-metric">
+                            <div class="demo-label">Estimated Burn</div>
+                            <div class="demo-value">₹1.2L / mo</div>
+                        </div>
+                    </div>
+                    <div class="demo-suggestion">
+                        <h4 style="margin-bottom: 0.5rem;"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Recommendation</h4>
+                        <p style="color: var(--text-secondary); font-size: 0.95rem;">The market in Bangalore is saturated with premium coffee brands. Consider a mobile "coffee cart" model in high-footfall tech hubs like Indiranagar or Whitefield to reduce fixed rental risks.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== 6. STATS ========== -->
+<section class="landing-section">
+    <div class="landing-container glass-card">
+        <div class="stats-container reveal-up">
+            <div>
+                <div class="stat-number">1000+</div>
+                <p>Ideas Analyzed</p>
+            </div>
+            <div>
+                <div class="stat-number">300+</div>
+                <p>Failure Patterns</p>
+            </div>
+            <div>
+                <div class="stat-number">85%</div>
+                <p>Prediction Accuracy</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== 6. CTA ========== -->
+<section class="cta-section">
+    <div class="cta-inner reveal-up">
+        <h2>Ready to build a <br><span class="gradient-text">Future-Proof Startup?</span></h2>
+        <a href="{% url 'signup' %}" class="btn-landing btn-white" style="margin-top: 2rem;">Get Started Now</a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const obs = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) e.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal-up').forEach(el => obs.observe(el));
+    });
+</script>
+{% endblock %}

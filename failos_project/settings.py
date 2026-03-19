@@ -31,7 +31,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-fallback-key-change-me')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['*'] # In production, replace with your specific Render URL
+ALLOWED_HOSTS = ['*', '.vercel.app'] # In production, replace with your specific Render/Vercel URL
 
 
 # Application definition

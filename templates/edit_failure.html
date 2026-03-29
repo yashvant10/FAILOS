@@ -80,7 +80,7 @@
             stateSelect.disabled = true;
             return;
         }
-        fetch(`/get-states/${countryId}/`)
+        fetch(`/api/states/${countryId}/`)
             .then(response => response.json())
             .then(data => {
                 stateSelect.innerHTML = '<option value="">Select State</option>';
@@ -101,7 +101,7 @@
             citySelect.disabled = true;
             return;
         }
-        fetch(`/get-cities/${stateId}/`)
+        fetch(`/api/cities/${stateId}/`)
             .then(response => response.json())
             .then(data => {
                 citySelect.innerHTML = '<option value="">Select City</option>';

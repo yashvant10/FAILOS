@@ -35,46 +35,48 @@
 
     <h3 style="margin-bottom: 1.5rem; font-weight: 800;">Recent Intelligence <span style="color: var(--text-muted); font-weight: 400; font-size: 1rem;">/ Failures</span></h3>
     <div class="glass-card" style="padding: 1.5rem; border-radius: var(--radius-lg);">
-        <table style="width: 100%; text-align: left; border-collapse: collapse;">
-            <thead>
-                <tr style="border-bottom: 1px solid var(--border-glass);">
-                    <th style="padding: 1rem;">Project Title</th>
-                    <th style="padding: 1rem;">Date</th>
-                    <th style="padding: 1rem;">Risk Level</th>
-                    <th style="padding: 1rem;">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for failure in recent_failures %}
-                <tr style="border-bottom: 1px solid var(--border-glass);">
-                    <td style="padding: 1rem;">{{ failure.title }}</td>
-                    <td style="padding: 1rem;"><span class="local-time" data-timestamp="{{ failure.date_submitted|date:'c' }}">{{ failure.date_submitted|date:"F d, Y H:i" }}</span></td>
-                    <td style="padding: 1rem;">
-                        {% if failure.analysis %}
-                            {% if failure.analysis.risk_level == 'HIGH' %}
-                                <span style="color: var(--danger);">
-                            {% elif failure.analysis.risk_level == 'MEDIUM' %}
-                                <span style="color: var(--warning);">
+        <div class="table-responsive">
+            <table style="width: 100%; text-align: left; border-collapse: collapse;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--border-glass);">
+                        <th style="padding: 1rem;">Project Title</th>
+                        <th style="padding: 1rem;">Date</th>
+                        <th style="padding: 1rem;">Risk Level</th>
+                        <th style="padding: 1rem;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for failure in recent_failures %}
+                    <tr style="border-bottom: 1px solid var(--border-glass);">
+                        <td style="padding: 1rem;">{{ failure.title }}</td>
+                        <td style="padding: 1rem;"><span class="local-time" data-timestamp="{{ failure.date_submitted|date:'c' }}">{{ failure.date_submitted|date:"F d, Y H:i" }}</span></td>
+                        <td style="padding: 1rem;">
+                            {% if failure.analysis %}
+                                {% if failure.analysis.risk_level == 'HIGH' %}
+                                    <span style="color: var(--danger);">
+                                {% elif failure.analysis.risk_level == 'MEDIUM' %}
+                                    <span style="color: var(--warning);">
+                                {% else %}
+                                    <span style="color: var(--success);">
+                                {% endif %}
+                                    {{ failure.analysis.get_risk_level_display }}
+                                </span>
                             {% else %}
-                                <span style="color: var(--success);">
+                                <span style="color: var(--text-muted);">N/A</span>
                             {% endif %}
-                                {{ failure.analysis.get_risk_level_display }}
-                            </span>
-                        {% else %}
-                            <span style="color: var(--text-muted);">N/A</span>
-                        {% endif %}
-                    </td>
-                    <td style="padding: 1rem;">
-                        <a href="{% url 'failure_details' failure.id %}" class="btn btn-outline" style="padding: 0.3rem 0.8rem; font-size: 0.85rem;">View Analysis</a>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="4" style="padding: 1rem; text-align: center; color: var(--text-secondary);">No ideas submitted yet.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                        </td>
+                        <td style="padding: 1rem;">
+                            <a href="{% url 'failure_details' failure.id %}" class="btn btn-outline" style="padding: 0.3rem 0.8rem; font-size: 0.85rem;">View Analysis</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" style="padding: 1rem; text-align: center; color: var(--text-secondary);">No ideas submitted yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         <div style="padding: 1rem; text-align: center;">
             <a href="{% url 'history' %}" style="font-size: 0.9rem;">View All History</a>
         </div>

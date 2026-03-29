@@ -11,15 +11,15 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
-import dj_database_url
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv()
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load environment variables from .env file
+env_path = BASE_DIR / '.env'
+load_dotenv(dotenv_path=env_path)
 
 
 # Quick-start development settings - unsuitable for production
@@ -29,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-fallback-key-change-me')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True # TEMPORARY FOR DEBUGGING VERCEL 500 ERROR
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = ['*', '.vercel.app'] # In production, replace with your specific Render/Vercel URL
 
@@ -80,14 +80,34 @@ WSGI_APPLICATION = 'failos_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# Use environment variables for database configuration
-# Database configuration
-DATABASES = {
-    'default': dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600
-    )
-}
+from urllib.parse import urlparse, unquote
+import os
+
+db_url = os.environ.get("DATABASE_URL")
+if db_url:
+    parsed_url = urlparse(db_url)
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": parsed_url.path[1:],
+            "USER": parsed_url.username,
+            "PASSWORD": unquote(parsed_url.password) if parsed_url.password else None,
+            "HOST": parsed_url.hostname,
+            "PORT": parsed_url.port or "6543",
+            "CONN_MAX_AGE": 600,
+            "OPTIONS": {
+                "sslmode": "require",
+            },
+        }
+    }
+else:
+    # Use SQLite as fallback for local development
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 # The Supabase configuration is available in .env but skipped for local stability.
 
@@ -127,7 +147,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / 'public']
+STATICFILES_DIRS = [
+    BASE_DIR / 'public',
+]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # WhiteNoise storage for compressed and cached files
@@ -136,6 +158,51 @@ if not DEBUG:
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+
+# CSRF Settings for Vercel
+CSRF_TRUSTED_ORIGINS = [
+    "https://failos.vercel.app",
+    "https://*.vercel.app"
+]
+
+# Logging for production debugging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'failures': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+# Ensure Database URL is present in production
+if not DEBUG and not os.getenv('DATABASE_URL'):
+    print("WARNING: DATABASE_URL environment variable is missing in production!")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -146,5 +213,5 @@ GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 
 # Auth Redirects
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'dashboard'  # Fixed to redirect to dashboard as per standard app flow
+LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'landing'

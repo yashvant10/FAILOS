@@ -84,6 +84,21 @@ a:hover {
     padding: 0 2rem;
 }
 
+.grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+@media (max-width: 768px) {
+    .grid-cols-2 {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Glassmorphism Classes */
 .glass-panel {
     background: var(--bg-glass);
@@ -98,62 +113,99 @@ a:hover {
 /* Navigation - Floating High-End Glass */
 .navbar {
     background: transparent;
-    border-bottom: none;
-    position: fixed; /* Always fixed */
-    top: 1.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    max-width: 1100px;
+    padding: 1.5rem 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     z-index: 2000;
-    padding: 0;
     transition: var(--transition);
 }
 
 .nav-container {
-    background: var(--bg-glass-heavy);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid var(--border-glass);
+    background: rgba(13, 17, 23, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--radius-pill);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 64px;
-    padding: 0 1.5rem;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    height: 70px;
+    padding: 0 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
 .brand-logo {
-    font-size: 1.25rem;
-    font-weight: 800;
+    font-size: 1.5rem;
+    font-weight: 900;
     color: var(--text-primary);
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.brand-logo .nav-icon {
+    font-size: 1.8rem;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 10px rgba(168, 85, 247, 0.5));
+}
+
+.brand-logo .logo-img {
+    height: 38px;
+    width: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.4));
+    transition: var(--transition);
+}
+
+.brand-logo .logo-img:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.8));
 }
 
 .brand-logo .highlight {
     color: var(--accent-primary);
-    text-shadow: 0 0 15px var(--accent-glow);
+    font-weight: 900;
 }
 
 .nav-links {
     display: flex;
-    gap: 2.5rem;
+    gap: 2rem;
     align-items: center;
+}
+
+/* Hamburger Menu Icon */
+.nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 2100;
 }
 
 .nav-link {
     color: var(--text-secondary);
-    font-weight: 500;
-    font-size: 0.9rem;
+    font-weight: 600;
+    font-size: 0.95rem;
     letter-spacing: 0.5px;
     transition: var(--transition);
+    text-decoration: none;
 }
 
 .nav-link:hover {
-    color: var(--text-primary);
-    transform: translateY(-1px);
+    color: var(--accent-primary);
+    transform: translateY(-2px);
+    text-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
 }
 
 /* Buttons */
@@ -274,7 +326,7 @@ a:hover {
     color: var(--text-muted);
     font-size: 0.95rem;
     line-height: 1.6;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
     max-width: 300px;
 }
 
@@ -399,6 +451,14 @@ a:hover {
 }
 
 /* Premium Table Styles */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-glass);
+}
+
 table {
     width: 100%;
     border-spacing: 0;
@@ -697,16 +757,59 @@ input:checked + .slider:before {
 /* Responsive Adjustments */
 @media (max-width: 1024px) {
     .settings-layout { grid-template-columns: 1fr; gap: 2rem; }
-    .settings-sidebar { position: static; flex-direction: row; overflow-x: auto; padding-bottom: 1rem; }
+    .settings-sidebar { position: sticky; top: 8rem; flex-direction: row; overflow-x: auto; padding-bottom: 1rem; background: var(--bg-main); z-index: 10; }
     .tab-nav-btn { white-space: nowrap; }
 }
 
 @media (max-width: 768px) {
-    .navbar { width: 95%; top: 1rem; }
+    .navbar { padding: 1rem 0; width: 100%; top: 0; }
+    .nav-container { 
+        width: 92%; 
+        border-radius: 20px; 
+        height: 60px; 
+        padding: 0 1.2rem;
+    }
+    
+    .nav-toggle { display: block; }
+    
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        height: 100vh;
+        background: var(--bg-glass-heavy);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        flex-direction: column;
+        justify-content: center;
+        gap: 2rem;
+        transition: var(--transition);
+        z-index: 2050;
+        border-left: 1px solid var(--border-glass);
+    }
+    
+    .nav-links.active {
+        right: 0;
+    }
+    
+    .nav-link { font-size: 1.2rem; }
+    
     .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
-    .hero h1 { font-size: 3rem; }
+    .hero h1 { font-size: 2.8rem; }
+    
+    .dashboard-grid { grid-template-columns: 1fr; }
+    .profile-header-container { flex-direction: column; text-align: center; padding: 2rem; }
+    .profile-meta { justify-content: center; flex-wrap: wrap; }
+    
+    .glass-card { overflow-x: auto; }
+    table { min-width: 600px; }
 }
 
 @media (max-width: 480px) {
     .footer-grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 2.2rem; }
+    .nav-container { height: 55px; }
+    .brand-logo .logo-img { height: 30px; }
+    .stat-value { font-size: 2.5rem; }
 }

@@ -73,7 +73,7 @@
         citySelect.disabled = true;
 
         if (countryId) {
-            fetch(`/get-states/${countryId}/`)
+            fetch(`/api/states/${countryId}/`)
                 .then(response => response.json())
                 .then(data => {
                     data.forEach(state => {
@@ -94,7 +94,7 @@
         citySelect.innerHTML = '<option value="">Select City</option>';
 
         if (stateId) {
-            fetch(`/get-cities/${stateId}/`)
+            fetch(`/api/cities/${stateId}/`)
                 .then(response => response.json())
                 .then(data => {
                     data.forEach(city => {

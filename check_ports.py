@@ -1,14 +1,14 @@
 import socket
 
 def check_port(host, port):
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.settimeout(5)
-        try:
-            s.connect((host, port))
-            print(f"Port {port} is OPEN")
-        except Exception as e:
-            print(f"Port {port} is CLOSED or UNREACHABLE: {e}")
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.settimeout(5)
+    result = sock.connect_ex((host, port))
+    if result == 0:
+        print(f"Port {port} is OPEN on {host}")
+    else:
+        print(f"Port {port} is CLOSED on {host} (Error: {result})")
+    sock.close()
 
-host = "db.nbsehwzthsezdswyttzq.supabase.co"
-check_port(host, 6543)
-check_port(host, 5432)
+check_port("db.nbsehwzthsezdswyttzq.supabase.co", 5432)
+check_port("db.nbsehwzthsezdswyttzq.supabase.co", 6543)

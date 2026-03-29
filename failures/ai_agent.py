@@ -127,8 +127,8 @@ IMPORTANT RULES:
 """
 
     try:
-        # Use the gemini-2.0-flash-lite model
-        model = genai.GenerativeModel('gemini-2.0-flash-lite')
+        # Use the gemini-1.5-flash model (more stable in this package version)
+        model = genai.GenerativeModel('gemini-1.5-flash')
         
         # Configure safety settings to be more permissive for analysis
         safety_settings = [
@@ -200,6 +200,11 @@ def _fallback_analysis(title, description, state, city, budget):
     """Fallback analysis using basic Python logic when Gemini API is unavailable."""
     text = f"{title} {description}".lower()
     
+    try:
+        budget_val = float(budget)
+    except (ValueError, TypeError):
+        budget_val = 0.0
+
     # Market Demand
     market_demand_score = random.randint(30, 95)
     if 'coffee' in text or 'food' in text or 'app' in text:
@@ -226,7 +231,7 @@ def _fallback_analysis(title, description, state, city, budget):
     elif 'coffee' in text or 'restaurant' in text or 'hardware' in text:
         estimated_cost = 500000.00
         
-    budget_status = 'Enough' if budget >= estimated_cost else 'Not Enough'
+    budget_status = 'Enough' if budget_val >= estimated_cost else 'Not Enough'
     if budget_status == 'Enough':
         budget_suggestion = "Your budget aligns well with estimated costs. Allocate a portion for marketing."
     else:

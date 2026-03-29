@@ -28,31 +28,45 @@ def contact_page(request):
 # Authentication
 def login_view(request):
     if request.method == 'POST':
-        u = request.POST.get('username')
-        p = request.POST.get('password')
-        user = authenticate(request, username=u, password=p)
-        if user is not None:
-            login(request, user)
-            messages.success(request, f"Welcome back, {user.username}!")
-            return redirect('dashboard')
-        else:
-            messages.error(request, "Invalid username or password.")
+        try:
+            u = request.POST.get('username')
+            p = request.POST.get('password')
+            user = authenticate(request, username=u, password=p)
+            if user is not None:
+                login(request, user)
+                messages.success(request, f"Welcome back, {user.username}!")
+                return redirect('dashboard')
+            else:
+                messages.error(request, "Invalid username or password.")
+        except Exception as e:
+            import traceback
+            print(f"LOGIN ERROR: {str(e)}")
+            print(traceback.format_exc())
+            messages.error(request, f"Login Error: {str(e)}")
+            return render(request, 'login.html')
     return render(request, 'login.html')
 
 def signup_view(request):
     if request.method == 'POST':
-        u = request.POST.get('username')
-        e = request.POST.get('email')
-        p = request.POST.get('password')
-        fn = request.POST.get('first_name', '')
-        ln = request.POST.get('last_name', '')
-        if User.objects.filter(username=u).exists():
-            messages.error(request, "Username already taken.")
-        else:
-            user = User.objects.create_user(username=u, email=e, password=p, first_name=fn, last_name=ln)
-            login(request, user)
-            messages.success(request, "Account created successfully!")
-            return redirect('dashboard')
+        try:
+            u = request.POST.get('username')
+            e = request.POST.get('email')
+            p = request.POST.get('password')
+            fn = request.POST.get('first_name', '')
+            ln = request.POST.get('last_name', '')
+            if User.objects.filter(username=u).exists():
+                messages.error(request, "Username already taken.")
+            else:
+                user = User.objects.create_user(username=u, email=e, password=p, first_name=fn, last_name=ln)
+                login(request, user)
+                messages.success(request, "Account created successfully!")
+                return redirect('dashboard')
+        except Exception as e:
+            import traceback
+            print(f"SIGNUP ERROR: {str(e)}")
+            print(traceback.format_exc())
+            messages.error(request, f"Signup Error: {str(e)}")
+            return render(request, 'signup.html')
     return render(request, 'signup.html')
 
 def logout_view(request):
@@ -99,7 +113,9 @@ def add_failure(request):
             if state_obj:
                 state_name = state_obj.name
         
-        budget = request.POST.get('budget', 0.00)
+        # Get budget and handle empty strings
+        budget_raw = request.POST.get('budget', '0.00').strip()
+        budget = budget_raw if budget_raw else '0.00'
         is_public = request.POST.get('is_public') == 'on'
         
         # Save record
@@ -220,7 +236,9 @@ def edit_failure(request, pk):
         failure.city_model = city_obj
         failure.state = state_name
         failure.state_model = state_obj
-        failure.budget = request.POST.get('budget', failure.budget)
+        # Get budget and handle empty strings
+        budget_raw = request.POST.get('budget', '').strip()
+        failure.budget = budget_raw if budget_raw else failure.budget
         failure.is_public = request.POST.get('is_public') == 'on'
         failure.save()
         
@@ -539,34 +557,14 @@ def predict_startup_success_api(request):
             idea = data.get('idea')
             location = data.get('location')
             
-            # Simple AI prompt for success prediction
-            import google.generativeai as genai
-            if settings.GEMINI_API_KEY:
-                genai.configure(api_key=settings.GEMINI_API_KEY)
-                model = genai.GenerativeModel('gemini-1.5-flash-latest')
-                prompt = f"""
-                Analyze this startup idea: '{idea}' in location: '{location}'.
-                Provide:
-                1. Success Probability (%)
-                2. Risk Level (Low/Medium/High)
-                3. Detailed Reasons (bullet points)
-                4. A one-sentence market insight.
-                Return ONLY a JSON object with keys: success_probability, risk_level, reasons (list), insight.
-                """
-                response = model.generate_content(prompt)
-                
-                # Robust extraction
-                resp_text = response.text.strip()
-                if '```' in resp_text:
-                    if '```json' in resp_text:
-                        resp_text = resp_text.split('```json')[1].split('```')[0].strip()
-                    else:
-                        resp_text = resp_text.split('```')[1].split('```')[0].strip()
-                
-                result = json.loads(resp_text)
-                return JsonResponse(result)
-            else:
-                return JsonResponse({'error': 'API Key not configured'}, status=500)
+            # Use the common analysis agent logic for consistency
+            analysis_data = analyze_failure(idea, "Success prediction request", "Unknown", location, 0)
+            return JsonResponse({
+                'success_probability': analysis_data['success_score'],
+                'risk_level': analysis_data['risk_level'],
+                'reasons': analysis_data['improvement_suggestions_list'], # suggestions as reasons
+                'insight': analysis_data['suggestion']
+            })
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
     return JsonResponse({'error': 'Invalid request'}, status=400)
